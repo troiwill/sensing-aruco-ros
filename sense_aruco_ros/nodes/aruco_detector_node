@@ -1,0 +1,147 @@
+#!/usr/bin/env python3
+
+import cv2
+from sense_aruco.detector import ArucoDetector
+from sense_aruco_msgs.msg import Marker, MarkerArray, MarkerPose, MarkerPoseArray
+from cv_bridge import CvBridge
+from geometry_msgs.msg import Pose
+import rospy
+from scipy.spatial.transform import Rotation as R
+from sensor_msgs.msg import Image
+
+
+class ArucoDetectorNode:
+    def __init__(
+        self,
+        camera_intrinsics_param_file,
+        family_name,
+        marker_side_len,
+        camera_image_sub_topic,
+        detection_only,
+    ):
+        assert isinstance(camera_intrinsics_param_file, str)
+        assert isinstance(family_name, str)
+        assert isinstance(marker_side_len, float)
+        assert isinstance(camera_image_sub_topic, str)
+        assert isinstance(detection_only, bool)
+
+        # Sets up the opencv bridge. Needed for converting ROS image to OpenCV format.
+        self.__cvbridge = CvBridge()
+
+        # Set up the marker estimator.
+        self.__marker_estimator = ArucoDetector()
+        self.__marker_estimator.load_camera_params(
+            paramfilepath=camera_intrinsics_param_file
+        )
+        self.__marker_estimator.set_marker_search_family(family_name=family_name)
+        self.__marker_estimator.set_marker_side_len(marker_side_len=marker_side_len)
+
+        # Determines if the node will publish Marker or MarkerPose arrays.
+        self.__detect_only = detection_only
+        if self.__detect_only == True:
+            self.__MSG_ARRAY_TYPE = MarkerArray
+            publish_topic_name = "aruco_marker_detections"
+        else:
+            self.__MSG_ARRAY_TYPE = MarkerPoseArray
+            publish_topic_name = "aruco_marker_poses"
+
+        # Sets up the aruco detection/pose publisher.
+        self.__msg_pub = rospy.Publisher(
+            publish_topic_name, self.__MSG_ARRAY_TYPE, queue_size=10
+        )
+
+        # Sets up the image subscriber.
+        self.__camera_image_sub = rospy.Subscriber(
+            camera_image_sub_topic, Image, callback=self.rcvd_image_callback
+        )
+
+    def rcvd_image_callback(self, image_msg):
+        """
+        Callback function used to estimate the marker pose and predicted
+        uncertainty.
+        """
+
+        def build_marker_msg(detection):
+            msg = Marker()
+
+            msg.mid = detection["mid"].item()
+            msg.corners = detection["corners"].flatten().tolist()
+            return msg
+
+        def build_pose_msg(pose_estimate):
+            msg = Pose()
+
+            tx, ty, tz = pose_estimate["tvec"].flatten()
+            msg.position.x = tx
+            msg.position.y = ty
+            msg.position.z = tz
+
+            rotmat, _ = cv2.Rodrigues(pose_estimate["rvec"].reshape(1, 3))
+            rotations = R.from_matrix(rotmat)
+            qx, qy, qz, qw = rotations.as_quat()
+            msg.orientation.x = qx
+            msg.orientation.y = qy
+            msg.orientation.z = qz
+            msg.orientation.w = qw
+
+            return msg
+
+        # Convert the color image to a CV image, and then get the data.
+        cv_image = self.__cvbridge.imgmsg_to_cv2(image_msg, desired_encoding="bgr8")
+
+        # Perform pose estimation on the detected markers.
+        detections = self.__marker_estimator.detect(cv_image)
+        pose_estimates = None
+        if self.__detect_only == False:
+            pose_estimates = self.__marker_estimator.estimate_pose(detections)
+
+        # If we want to estimate the pose and no poses were computed, return None.
+        if self.__detect_only == False and (
+            pose_estimates is None or len(pose_estimates) == 0
+        ):
+            return
+
+        # Extract the detection/pose information and publish the messages.
+        msg_array = self.__MSG_ARRAY_TYPE()
+        msg_array.header = image_msg.header
+        for i in range(len(detections)):
+            # Gather the marker information.
+            marker_msg = build_marker_msg(detections[i])
+
+            # Gather the marker pose information if required.
+            if self.__detect_only == False:
+                pose_msg = build_pose_msg(pose_estimates[i])
+                msg = MarkerPose()
+
+                msg.detection = marker_msg
+                msg.pose = pose_msg
+                msg_array.markers.append(msg)
+
+            else:
+                msg_array.detections.append(marker_msg)
+
+        self.__msg_pub.publish(msg_array)
+
+
+if __name__ == "__main__":
+    rospy.init_node("aruco_detector_node", anonymous=True)
+
+    # Configure the node with parameters.
+    camera_intrinsics_param_file = rospy.get_param("camera_intrinsics_file")
+
+    family_name = rospy.get_param("aruco_family_name")
+    marker_side_len = rospy.get_param("aruco_marker_len")
+    image_sub_topic = rospy.get_param("camera_image_topic")
+    detection_only = rospy.get_param("detection_only")
+
+    # Create the estimator node and run.
+    aruco_estimator_node = ArucoDetectorNode(
+        camera_intrinsics_param_file=camera_intrinsics_param_file,
+        family_name=family_name,
+        marker_side_len=marker_side_len,
+        camera_image_sub_topic=image_sub_topic,
+        detection_only=detection_only,
+    )
+
+    rospy.spin()
+# end if
