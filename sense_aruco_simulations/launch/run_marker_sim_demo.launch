@@ -1,0 +1,20 @@
+<launch>
+    <!-- Load the parameters for the detector -->
+    <rosparam command="load"
+        file="$(find sense_aruco_simulations)/param/marker_detector_params.yaml"/>
+    <rosparam param="camera_intrinsics_file" subst_value="True">
+        $(find sense_aruco_simulations)/param/fpv_cam_instrinsics.yaml
+    </rosparam>
+
+    <!-- Launch Gazebo -->
+    <include file="$(find sense_aruco_simulations)/launch/gazebo.launch">
+        <arg name="verbose" value="true"/>
+    </include>
+
+    <!-- Spawn the objects in Gazebo -->
+    <include file="$(find sense_aruco_simulations)/launch/spawn_demo_objects.launch"/>
+
+    <!-- Run the detector node -->
+    <node pkg="sense_aruco_ros" type="aruco_detector_node" name="aruco_detector_node"
+        output="screen" required="true"/>
+</launch>

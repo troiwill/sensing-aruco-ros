@@ -1,0 +1,40 @@
+<sdf version="1.6">
+  <model name="aruco_on_box">
+
+    <model name="box">
+      <static>true</static>
+        <pose>0 0 0.35 0 0 0</pose>
+        <link name="link">
+          <collision name="collision">
+            <geometry>
+              <box>
+                <size>0.5 0.2 0.7</size>
+              </box>
+            </geometry>
+          </collision>
+          <visual name="visual">
+            <geometry>
+              <box>
+                <size>0.5 0.2 0.7</size>
+              </box>
+            </geometry>
+            <material>
+              <script>Gazebo/WoodPallet</script>
+            </material>
+          </visual>
+        </link>
+      </model>
+
+    <include>
+      <uri>model://aruco_fam4x4_1000_id25_sdf</uri>
+      <name>aruco</name>
+      <pose>0 0.101 0.5 1.5708 0 3.1416</pose>
+    </include>
+
+    <joint name="aruco_box_joint" type="fixed">
+      <parent>box::link</parent>
+      <child>aruco::link</child>
+      
+    </joint>
+  </model>
+</sdf>

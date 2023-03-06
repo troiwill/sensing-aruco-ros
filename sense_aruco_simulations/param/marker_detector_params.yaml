@@ -1,0 +1,4 @@
+aruco_family_name: DICT_4X4_1000
+aruco_marker_len: 0.18
+camera_image_topic: "/fpv_cam/usb_cam/image_raw"
+detection_only: false

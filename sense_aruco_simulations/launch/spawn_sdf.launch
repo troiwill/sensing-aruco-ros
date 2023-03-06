@@ -1,0 +1,16 @@
+<launch>
+    <arg name="model_name" default=""/>
+    <arg name="model_path" default=""/>
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="0"/>
+
+    <!-- Spawn marker -->
+    <node name="$(arg model_name)" output="screen" pkg="gazebo_ros"
+        type="spawn_model"
+        args="-sdf -file $(arg model_path) -model $(arg model_name) -x $(arg x) -y $(arg y) -z $(arg z) 
+        -R $(arg R) -P $(arg P) -Y $(arg Y)"/>
+</launch>

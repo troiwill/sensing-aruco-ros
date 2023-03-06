@@ -1,0 +1,23 @@
+<launch>
+    <!-- Camera configs -->
+    <arg name="camera_name" default="fpv_cam"/>
+    <arg name="camera_path" default="$(find sense_aruco_simulations)/sdf/$(arg camera_name)/model.sdf"/>
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="0"/>
+
+    <!-- Spawn marker -->
+    <include file="$(find sense_aruco_simulations)/launch/spawn_sdf.launch">
+        <arg name="model_name" value="$(arg camera_name)"/>
+        <arg name="model_path" value="$(arg camera_path)"/>
+        <arg name="x" value="$(arg x)"/>
+        <arg name="y" value="$(arg y)"/>
+        <arg name="z" value="$(arg z)"/>
+        <arg name="R" value="$(arg R)"/>
+        <arg name="P" value="$(arg P)"/>
+        <arg name="Y" value="$(arg Y)"/>
+    </include>
+</launch>

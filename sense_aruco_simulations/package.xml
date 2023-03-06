@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<package format="2">
+  <name>sense_aruco_simulations</name>
+  <version>0.0.1</version>
+  <description>A Gazebo simulation package for Aruco markers.</description>
+  <maintainer email="willkode@outlook.com">Troi Williams</maintainer>
+  <license>MIT</license>
+
+  <url type="website">https://github.com/troiwill/sensing-aruco</url>
+  <url type="bugtracker">https://github.com/troiwill/sensing-aruco/issues</url>
+
+  <author email="willkode@outlook.com">Troi Williams</author>
+
+  <buildtool_depend>catkin</buildtool_depend>
+  <exec_depend>gazebo_ros</exec_depend>
+  <exec_depend>sense_aruco</exec_depend>
+  <exec_depend>sense_aruco_ros</exec_depend>
+  <exec_depend>aruco_marker_description</exec_depend>
+
+  <export>
+    <gazebo_ros gazebo_media_path="${prefix}"/>
+    <gazebo_ros gazebo_model_path="${prefix}/models"/>
+  </export>
+
+</package>

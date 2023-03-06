@@ -1,0 +1,38 @@
+<launch>
+    <!-- Camera + box configs -->
+    <arg name="cam_box_name" default="box_for_fpv"/>
+    <arg name="cam_box_path" default="$(find sense_aruco_simulations)/models/$(arg cam_box_name)/model.sdf"/>
+    <arg name="y_dist_from_marker" default="2"/>
+
+    <!-- Aruco + box configs -->
+    <arg name="aruco_with_box_name" default="aruco_on_box"/>
+    <arg name="aruco_with_box_path" default="$(find sense_aruco_simulations)/models/$(arg aruco_with_box_name)/model.sdf"/>
+
+    <!-- FPV camera configs -->
+    <arg name="fpv_cam_name" default="fpv_cam"/>
+    <arg name="fpv_cam_path" default="$(find sense_aruco_simulations)/models/$(arg fpv_cam_name)/model.sdf"/>
+    <arg name="fpv_z" default="0.49"/>
+    <arg name="fpv_Y" default="-1.5708"/>
+
+    <!-- Spawn box for camera -->
+    <include file="$(find sense_aruco_simulations)/launch/spawn_sdf.launch">
+        <arg name="model_name" value="$(arg cam_box_name)"/>
+        <arg name="model_path" value="$(arg cam_box_path)"/>
+        <arg name="y" value="$(arg y_dist_from_marker)"/>
+    </include>
+
+    <!-- Spawn FPV camera -->
+    <include file="$(find sense_aruco_simulations)/launch/spawn_sdf.launch">
+        <arg name="model_name" value="$(arg fpv_cam_name)"/>
+        <arg name="model_path" value="$(arg fpv_cam_path)"/>
+        <arg name="y" value="$(arg y_dist_from_marker)"/>
+        <arg name="z" value="$(arg fpv_z)"/>
+        <arg name="Y" value="$(arg fpv_Y)"/>
+    </include>
+
+    <!-- Spawn aruco marker + box -->
+    <include file="$(find sense_aruco_simulations)/launch/spawn_sdf.launch">
+        <arg name="model_name" value="$(arg aruco_with_box_name)"/>
+        <arg name="model_path" value="$(arg aruco_with_box_path)"/>
+    </include>
+</launch>

@@ -1,0 +1,30 @@
+# The parameters were derived from the camera's "camera_info" ROS topic.
+---
+horizontal_fov: 1.047
+image_width: 320
+image_height: 240
+K:
+  rows: 3
+  cols: 3
+  dt: d
+  data: [277.191356,   0.      , 160.00000,
+           0.      , 277.191356, 120.00000,
+           0.      ,   0.      ,   1.     ]
+distortion_model: plumb_bob
+D:
+  rows: 1
+  cols: 5
+  dt: d
+  data: [0., 0., 0., 0., 0.]
+rectification_matrix:
+  rows: 3
+  cols: 3
+  data: [1., 0., 0.,
+         0., 1., 0.,
+         0., 0., 1.]
+projection_matrix:
+  rows: 3
+  cols: 4
+  data: [277.191356,   0.      , 160.00000,  -0.     ,
+           0.      , 277.191356, 120.00000,   0.     ,
+           0.      ,   0.      ,   1.     ,   0.     ]
