@@ -1,0 +1,16 @@
+<launch>
+    <!-- Aruco marker configs -->
+    <arg name="marker_name" default="aruco_marker"/>
+    <arg name="marker_path" default="$(find aruco_marker_description)/models/aruco_fam4x4_1000_id25_sdf/model.sdf"/>
+    <arg name="x" default="0"/>
+    <arg name="y" default="0"/>
+    <arg name="z" default="0.1"/>
+    <arg name="R" default="0"/>
+    <arg name="P" default="0"/>
+    <arg name="Y" default="0"/>
+
+  <!-- Spawn marker -->
+    <node name="$(arg marker_name)" output="screen" pkg="gazebo_ros" type="spawn_model"
+        args="-sdf -file $(arg marker_path) -model $(arg marker_name) -x $(arg x) -y $(arg y) -z $(arg z) 
+        -R $(arg R) -P $(arg P) -Y $(arg Y)"/>
+</launch>
