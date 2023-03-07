@@ -3,13 +3,25 @@ A set of ROS packages for detecting ArUco markers.
 
 ## Prerequisites
 
-1) Install ROS geometry msgs, std msgs, and cv-bridge packages.
+1) Uninstall opencv-python if it is installed. Having opencv-python and opencv-contrib-python will conflict with each other.
+```
+# Use the following for Python 3.
+python3 -m pip uninstall opencv-python
+```
+
+2) Install ROS geometry msgs, std msgs, and cv-bridge packages.
 ```
 # Use the following for ROS Noetic.
 sudo apt-get install ros-noetic-geometry-msgs ros-noetic-std-msgs ros-noetic-cv-bridge
 ```
 
-2) Use [these instructions](https://github.com/troiwill/sensing-aruco) to install the `sensing-aruco` Python package.
+3) Install the following Python packages.
+```
+# Use the following for Python 3.
+python3 -m pip install opencv-contrib-python>=4.6.0.66 scipy>=1.9.0 --user
+```
+
+4) Install [sensing-aruco](https://github.com/troiwill/sensing-aruco) Python package using the linked instructions ([link](https://github.com/troiwill/sensing-aruco/blob/main/README.md#installation)).
 
 ## Installation
 
