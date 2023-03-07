@@ -21,7 +21,7 @@ sudo apt-get install ros-noetic-geometry-msgs ros-noetic-std-msgs ros-noetic-cv-
 python3 -m pip install opencv-contrib-python>=4.6.0.66 scipy>=1.9.0 --user
 ```
 
-4) Install [sensing-aruco](https://github.com/troiwill/sensing-aruco) Python package using the linked instructions ([link](https://github.com/troiwill/sensing-aruco/blob/main/README.md#installation)).
+4) Install [sensing-aruco](https://github.com/troiwill/sensing-aruco) Python package using the linked instructions ([link](https://github.com/troiwill/sensing-aruco/blob/main/README.md#installation)). You should only follow the installation instructions.
 
 ## Installation
 
