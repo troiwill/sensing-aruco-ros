@@ -13,7 +13,6 @@
 
   <buildtool_depend>catkin</buildtool_depend>
   <exec_depend>gazebo_ros</exec_depend>
-  <exec_depend>sense_aruco</exec_depend>
   <exec_depend>sense_aruco_ros</exec_depend>
   <exec_depend>aruco_marker_description</exec_depend>
 
