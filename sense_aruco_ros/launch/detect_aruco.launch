@@ -1,0 +1,15 @@
+<launch>
+    <arg name="camera_params_file"/>    <!-- YAML file containing the camera intrinsics -->
+    <arg name="detector_params_file"/>  <!-- YAML file containing the detector parameters -->
+    <arg name="detector_required" default="true"/>
+
+    <!-- Aruco marker detector params -->
+    <rosparam param="camera_intrinsics_file" subst_value="True">
+        $(arg camera_params_file)
+    </rosparam>
+    <rosparam command="load" file="$(arg detector_params_file)"/>
+
+    <!-- Marker detector -->
+    <node name="aruco_detector_node" pkg="sense_aruco_ros" type="aruco_detector_node"
+        required="$(arg detector_required)"/>
+</launch>
