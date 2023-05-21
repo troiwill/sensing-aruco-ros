@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 
 import cv2
+import numpy as np
 from sense_aruco.detector import ArucoDetector
 from sense_aruco_msgs.msg import Marker, MarkerArray, MarkerPose, MarkerPoseArray
 from cv_bridge import CvBridge
 from geometry_msgs.msg import Pose
 import rospy
-from scipy.spatial.transform import Rotation as R
 from sensor_msgs.msg import Image
+import tf
 
 
 class ArucoDetectorNode:
@@ -76,9 +77,9 @@ class ArucoDetectorNode:
             msg.position.y = ty
             msg.position.z = tz
 
-            rotmat, _ = cv2.Rodrigues(pose_estimate["rvec"].reshape(1, 3))
-            rotations = R.from_matrix(rotmat)
-            qx, qy, qz, qw = rotations.as_quat()
+            rotmat = np.eye(4, dtype=np.float64)
+            rotmat[:3, :3], _ = cv2.Rodrigues(pose_estimate["rvec"].reshape(1, 3))
+            qx, qy, qz, qw = tf.transformations.quaternion_from_matrix(rotmat)
             msg.orientation.x = qx
             msg.orientation.y = qy
             msg.orientation.z = qz
