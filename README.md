@@ -40,7 +40,7 @@ chmod +x sense_aruco_ros/nodes/aruco_detector_node
 
 3) Build the workspaces.
 ```
-cd ..
+cd <catkin workspace>
 catkin build
 ```
 
